@@ -1,0 +1,8 @@
+export const FAIL_REQUEST ='FAIL_REQUEST';
+export const ADD_NEW_USER ='ADD_NEW_USER';
+export const GET_LIBRARIAN_LIST ='GET_LIBRARIAN_LIST';
+export const USER_LOGIN ='USER_LOGIN';
+export const GET_STUDENT_LIST ='GET_STUDENT_LIST';
+export const GET_BOOK_LIST ='GET_BOOK_LIST';
+export const ADD_NEW_BOOK ='ADD_NEW_BOOK';
+export const DELETE_BOOK = "DELETE_BOOK";

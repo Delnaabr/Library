@@ -1,0 +1,60 @@
+/* @tailwind base; */
+@tailwind components;
+@tailwind utilities;
+
+.button-div {
+  margin-top: 2rem;
+}
+.btn-class {
+  background-color: #1bbd36 !important;
+  color: white !important;
+  width: 12rem;
+}
+.login-div {
+  margin-top: 8rem;
+}
+.listing-div {
+  display: flex;
+  justify-content: center;
+  margin-top: 5rem;
+}
+.add-books {
+  display: flex;
+  justify-content: center;
+}
+.btn-class-listing {
+  margin: 2rem !important;
+}
+.login-text {
+  text-align: center;
+}
+.table-container {
+  border: 1px solid;
+  background-color: #c6ffdd;
+}
+.admin-table-container {
+  margin-top: 8rem;
+  background-color: #c6ffdd;
+  width: 95% !important;
+  margin-left: 2rem;
+}
+.head-text {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+.search-bar-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+.textfield-search {
+  width: 50%;
+  margin: 2rem;
+}
+.send-button{
+  white-space: normal;
+  width: 9rem;
+}
