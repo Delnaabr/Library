@@ -7,15 +7,49 @@ import {
   TableCell,
   TableBody,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  Snackbar,
+  SnackbarContent,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { bookDetails } from "@/pages/utils/apis";
 import "../../globals.css";
 import AddBooksPopup from "@/app/AddBooks/page";
+import EditBookPopup from "@/app/EditBooks/page";
 
 function BookListing() {
   const [books, setBooks] = useState<any[]>([]);
   const [showAddBooksPopup, setShowAddBooksPopup] = useState(false);
+  const [editingBook, setEditingBook] = useState(null);
+  const [isEditDialogOpen, setEditDialogOpen] = useState(false);
+  const [isDeleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
+  const [bookToDeleteId, setBookToDeleteId] = useState("");
+  const [isSnackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  const openSnackbar = (message: any) => {
+    setSnackbarMessage(message);
+    setSnackbarOpen(true);
+  };
+
+  const closeSnackbar = () => {
+    setSnackbarOpen(false);
+  };
+
+  const openDeleteConfirmation = (libid: string) => {
+    setBookToDeleteId(libid);
+    setDeleteConfirmationOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (bookToDeleteId) {
+      handleBlock(bookToDeleteId);
+      setDeleteConfirmationOpen(false);
+    }
+  };
 
   useEffect(() => {
     fetch(bookDetails)
@@ -38,6 +72,11 @@ function BookListing() {
     setBooks([...books, newBook]);
   };
 
+  const handleEditBook = (book: any) => {
+    setEditingBook(book);
+    setEditDialogOpen(true);
+  };
+
   const handleBlock = (libid: string) => {
     fetch(`${bookDetails}/${libid}`, {
       method: "DELETE",
@@ -50,70 +89,145 @@ function BookListing() {
           return book;
         });
         setBooks(updatedBooks);
-        alert("Book Deleted Successfully");
+        openSnackbar("Book Deleted Successfully");
       })
       .catch((error) => {
-        console.error("Error blocking customer:", error);
+        openSnackbar("Error blocking customer:");
       });
   };
   return (
-    <TableContainer className="admin-table-container">
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableCell align="center" colSpan={6}>
-            <Button color="success" onClick={handleShowAddBooksPopup}>
-              Add Books
+    <>
+      <div>
+        <TableContainer className="admin-table-container">
+          <Button
+            color="success"
+            className="admin-table-container"
+            onClick={handleShowAddBooksPopup}
+          >
+            Add Books
+          </Button>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell align="center">Book Name</TableCell>
+                <TableCell align="center">Author</TableCell>
+                <TableCell align="center">Category</TableCell>
+                <TableCell align="center">Stocks</TableCell>
+                <TableCell align="center">Status</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {books?.map((lib) => (
+                <TableRow key={lib.id}>
+                  <TableCell component="th" scope="row" align="center">
+                    {lib.book_name}
+                  </TableCell>
+                  <TableCell align="center">{lib.author}</TableCell>
+                  <TableCell align="center">{lib.category}</TableCell>
+                  <TableCell align="center">{lib.stock}</TableCell>
+                  <TableCell align="center">
+                    {lib.stock > 0 ? (
+                      "In Stock"
+                    ) : (
+                      <span style={{ color: "red" }}>Out of Stock </span>
+                    )}
+                  </TableCell>
+                  <TableCell align="center">
+                    <Button
+                      className="edit-btn"
+                      color="primary"
+                      onClick={() => handleEditBook(lib)}
+                    >
+                      Edit
+                    </Button>
+                  </TableCell>
+
+                  <TableCell align="center">
+                    {!lib.blocked ? (
+                      <Button
+                        className="delete-btn"
+                        color="error"
+                        onClick={() => openDeleteConfirmation(lib.id)}
+                      >
+                        Delete
+                      </Button>
+                    ) : (
+                      "Deleted"
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          {showAddBooksPopup && (
+            <AddBooksPopup
+              open={showAddBooksPopup}
+              onClose={handleCloseAddBooksPopup}
+              onAddBook={handleAddBook}
+              books={books}
+            />
+          )}
+          {editingBook && (
+            <EditBookPopup
+              open={isEditDialogOpen}
+              onClose={() => {
+                setEditDialogOpen(false);
+                setEditingBook(null);
+              }}
+              bookData={editingBook}
+              onUpdateBook={(updatedBook: any) => {
+                const updatedBooks = books.map((book) => {
+                  if (book.id === updatedBook.id) {
+                    return updatedBook;
+                  }
+                  return book;
+                });
+                setBooks(updatedBooks);
+                setEditDialogOpen(false);
+                setEditingBook(null);
+                openSnackbar("Book Updated Successfully");
+              }}
+            />
+          )}
+        </TableContainer>
+      </div>
+      <Dialog
+        open={isDeleteConfirmationOpen}
+        onClose={() => setDeleteConfirmationOpen(false)}
+      >
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this book?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setDeleteConfirmationOpen(false)}
+            color="primary"
+          >
+            No
+          </Button>
+          <Button onClick={confirmDelete} color="primary">
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Snackbar
+        open={isSnackbarOpen}
+        autoHideDuration={4000}
+        onClose={closeSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <SnackbarContent
+          message={snackbarMessage}
+          action={
+            <Button color="inherit" size="small" onClick={closeSnackbar}>
+              Close
             </Button>
-          </TableCell>
-          <TableRow>
-            <TableCell align="center">Book Name</TableCell>
-            <TableCell align="center">Author</TableCell>
-            <TableCell align="center">Category</TableCell>
-            <TableCell align="center">Stocks</TableCell>
-            <TableCell align="center">Status</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {books?.map((lib) => (
-            <TableRow key={lib.id}>
-              <TableCell component="th" scope="row" align="center">
-                {lib.book_name}
-              </TableCell>
-              <TableCell align="center">{lib.author}</TableCell>
-              <TableCell align="center">{lib.category}</TableCell>
-              <TableCell align="center">{lib.stock}</TableCell>
-              <TableCell align="center">
-                {lib.stock > 0 ? (
-                  "In Stock"
-                ) : (
-                  <span style={{ color: "red" }}>Out of Stock </span>
-                )}
-              </TableCell>
-              <TableCell align="center">
-                {!lib.blocked ? (
-                  <Button
-                    className="delete-btn"
-                    color="error"
-                    onClick={() => handleBlock(lib.id)}
-                  >
-                    Delete
-                  </Button>
-                ) : (
-                  "Deleted"
-                )}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      {showAddBooksPopup && (
-        <AddBooksPopup
-          open={showAddBooksPopup}
-          onClose={handleCloseAddBooksPopup}
-          onAddBook={handleAddBook}
+          }
         />
-      )}
-    </TableContainer>
+      </Snackbar>
+    </>
   );
 }
 

@@ -31,6 +31,8 @@
 .table-container {
   border: 1px solid;
   background-color: #c6ffdd;
+  margin: 2rem;
+  width: 95% !important;
 }
 .admin-table-container {
   margin-top: 8rem;
@@ -51,10 +53,19 @@
   width: 100%;
 }
 .textfield-search {
-  width: 50%;
+  width: 25%;
   margin: 2rem;
 }
-.send-button{
+.send-button {
   white-space: normal;
-  width: 9rem;
+  width: 5rem;
+}
+.dialogue-div {
+  width: 15rem;
+}
+.category-select {
+  width: 25%;
+}
+.edit-text-field{
+  margin: 1rem;
 }

@@ -1,6 +1,13 @@
-"use client";
+'use client'
 import React, { useEffect, useState } from "react";
-import { TextField, Button, Grid, Container } from "@mui/material";
+import {
+  Snackbar,
+  SnackbarContent,
+  TextField,
+  Button,
+  Grid,
+  Container,
+} from "@mui/material";
 import "../../app/globals.css";
 import Link from "next/link";
 import { register } from "@/pages/utils/apis";
@@ -10,17 +17,27 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const [isSnackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  
+  const openSnackbar = (message:any) => {
+    setSnackbarMessage(message);
+    setSnackbarOpen(true);
+  };
 
-  const handleLogin = (e: any) => {
+  const closeSnackbar = () => {
+    setSnackbarOpen(false);
+  };
+  
+  const handleLogin = (e:any) => {
     e.preventDefault();
     const adminUsername = "admin";
     const adminPassword = "admin";
     if (username === adminUsername && password === adminPassword) {
-      alert("Admin login successful");
+      openSnackbar("Admin login successful");
       localStorage.setItem("userRole", "ADMIN");
       router.push("/Admin/librarianList");
-      window.location.reload()
-
+      window.location.reload();
     } else {
       fetch(register, {
         method: "GET",
@@ -31,19 +48,20 @@ const Login = () => {
         .then((response) => response.json())
         .then((data) => {
           const matchingUser = data.find(
-            (user: any) =>
+            (user:any) =>
               user.username === username && user.password === password
           );
- 
+
           if (matchingUser) {
-            alert("Login successful");
+            localStorage.setItem("userId", matchingUser.id);
+            openSnackbar("Login successful");
             router.push("/Listing");
           } else {
-            alert("Login failed. Incorrect username or password.");
+            openSnackbar("Login failed. Incorrect username or password.");
           }
         })
-        .catch((error) => {
-          alert("Error fetching user data");
+        .catch(() => {
+          openSnackbar("Error fetching user data");
         });
     }
   };
@@ -104,6 +122,23 @@ const Login = () => {
           </form>
         </div>
       </Container>
+      <div className="snackbar-div">
+        <Snackbar
+          open={isSnackbarOpen}
+          autoHideDuration={4000} 
+          onClose={closeSnackbar}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        >
+          <SnackbarContent
+            message={snackbarMessage}
+            action={
+              <Button color="inherit" size="small" onClick={closeSnackbar}>
+                Close
+              </Button>
+            }
+          />
+        </Snackbar>
+      </div>
     </>
   );
 };

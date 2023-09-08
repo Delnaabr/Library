@@ -2,7 +2,8 @@ import { Provider } from "react-redux";
 import Header from "./Header/page";
 import "./globals.css";
 import type { Metadata } from "next";
-// import Store from "./redux/store";
+import Store from "./redux/store";
+import { ReduxProvider } from "./redux/provider";
 
 export const metadata: Metadata = {
   title: "Library Management",
@@ -18,10 +19,10 @@ export default function RootLayout({
     <html lang="en">
       <body className="main-container">
         (
-        {/* <Provider store={Store}> */}
+        <ReduxProvider>
           <Header />
           {children}
-        {/* </Provider> */}
+        </ReduxProvider>
         )
       </body>
     </html>

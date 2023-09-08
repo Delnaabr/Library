@@ -4,6 +4,7 @@ import React from "react";
 
 const Header = () => {
   const isAdmin = localStorage.getItem("userRole") === "ADMIN" || false;
+  const isLogined = localStorage.getItem("userId");
 
   const handleLogout = () => {
     localStorage.clear();
@@ -62,7 +63,7 @@ const Header = () => {
               </a>
             </h1>
             <a href="index.html" className="logo me-auto me-lg-0">
-              <img src="assets/img/logo.png" alt="" className="img-fluid" />
+              {/* <img src="assets/img/logo.png" alt="" className="img-fluid" /> */}
             </a>
 
             <nav id="navbar" className="navbar order-last order-lg-0">
@@ -93,22 +94,20 @@ const Header = () => {
                     </ul>
                   </>
                 ) : (
-                  <li>
-                    <Link href="/Listing" passHref>
-                      Listing
-                    </Link>
-                  </li>
+                  isLogined && (
+                    <li>
+                      <Link href="/Listing" passHref>
+                        Listing
+                      </Link>
+                    </li>
+                  )
                 )}
 
-                {isAdmin ? (
+                {isAdmin && (
                   <li>
                     <Link href="/Admin/Suggestions" passHref>
                       Suggestions
                     </Link>
-                  </li>
-                ) : (
-                  <li>
-                    <a href="/service">Services</a>
                   </li>
                 )}
                 {isAdmin ? (
@@ -119,7 +118,11 @@ const Header = () => {
                   </li>
                 ) : (
                   <li>
-                    <Link href="/Login" className="nav-link">
+                    <Link
+                      href="/Login"
+                      className="nav-link"
+                      onClick={handleLogout}
+                    >
                       Admin
                     </Link>
                   </li>

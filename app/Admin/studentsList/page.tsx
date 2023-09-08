@@ -29,7 +29,7 @@ function StudentsList() {
   }, []);
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
 
   const handlePopupOpen = () => {
     setIsPopupOpen(true);
@@ -46,7 +46,7 @@ function StudentsList() {
 
   return (
     <>
-     <Dialog open={isPopupOpen} onClose={handlePopupClose}>
+      <Dialog open={isPopupOpen} onClose={handlePopupClose}>
         <DialogTitle>Send Notification</DialogTitle>
         <DialogContent>
           <TextField
@@ -57,8 +57,13 @@ function StudentsList() {
             fullWidth
             value={message}
             onChange={(e) => setMessage(e.target.value)}
+            required
           />
-          <Button onClick={handleNotificationSend} className="send-button">
+          <Button
+            onClick={handleNotificationSend}
+            className="send-button"
+            disabled={!message}
+          >
             Send
           </Button>
         </DialogContent>
@@ -92,7 +97,11 @@ function StudentsList() {
                   {lib.book_return_date ? lib.book_return_date : "-"}
                 </TableCell>
                 <TableCell align="right">{lib.status}</TableCell>
-                <TableCell align="right"><Button className="send-button" onClick={handlePopupOpen}>Send Notification</Button></TableCell>
+                <TableCell align="right">
+                  <Button className="send-button" onClick={handlePopupOpen}>
+                    Send Notification
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

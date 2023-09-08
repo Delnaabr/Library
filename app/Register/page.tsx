@@ -8,6 +8,12 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  Snackbar,
+  SnackbarContent,
 } from "@mui/material";
 import "../../app/globals.css";
 import { register } from "@/pages/utils/apis";
@@ -23,6 +29,17 @@ const Register = () => {
     address: "",
     gender: "",
   });
+  const [isSnackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  
+  const openSnackbar = (message:any) => {
+    setSnackbarMessage(message);
+    setSnackbarOpen(true);
+  };
+
+  const closeSnackbar = () => {
+    setSnackbarOpen(false);
+  };
 
   const handleInputChange = (field: any, value: any) => {
     setUserDetails((prevDetails) => ({
@@ -43,7 +60,8 @@ const Register = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        alert("Registered Successfully");
+        openSnackbar("Registered Successfully");
+        router.push("/Login");
         setUserDetails({
           username: "",
           email: "",
@@ -52,103 +70,133 @@ const Register = () => {
           address: "",
           gender: "",
         });
-        router.push("/Login");
       })
       .catch((error) => {
-        alert("Error adding product");
+        openSnackbar("Error");
       });
   };
 
   return (
-    <Container component="main" maxWidth="xs" className="login-div">
-      <div>
-        <h2>Registration</h2>
-        <form onSubmit={handleRegister}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Username"
-                variant="outlined"
-                value={userDetails.username}
-                onChange={(e) => handleInputChange("username", e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Email"
-                variant="outlined"
-                value={userDetails.email}
-                onChange={(e) => handleInputChange("email", e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                type="password"
-                label="Password"
-                variant="outlined"
-                value={userDetails.password}
-                onChange={(e) => handleInputChange("password", e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                type="number"
-                label="Phone"
-                variant="outlined"
-                value={userDetails.phone}
-                onChange={(e) => handleInputChange("phone", e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Address"
-                variant="outlined"
-                value={userDetails.address}
-                onChange={(e) => handleInputChange("address", e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <RadioGroup
-                aria-label="gender"
-                name="gender"
-                value={userDetails.gender}
-                onChange={(e) => handleInputChange("gender", e.target.value)}
-              >
-                <FormControlLabel
-                  value="male"
-                  control={<Radio />}
-                  label="Male"
+    <>
+      <Container component="main" maxWidth="xs" className="login-div">
+        <div>
+          <h2>Registration</h2>
+          <form onSubmit={handleRegister}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Username"
+                  variant="outlined"
+                  value={userDetails.username}
+                  onChange={(e) =>
+                    handleInputChange("username", e.target.value)
+                  }
                 />
-                <FormControlLabel
-                  value="female"
-                  control={<Radio />}
-                  label="Female"
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Email"
+                  variant="outlined"
+                  value={userDetails.email}
+                  onChange={(e) => handleInputChange("email", e.target.value)}
                 />
-                <FormControlLabel
-                  value="other"
-                  control={<Radio />}
-                  label="Other"
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  type="password"
+                  label="Password"
+                  variant="outlined"
+                  value={userDetails.password}
+                  onChange={(e) =>
+                    handleInputChange("password", e.target.value)
+                  }
                 />
-              </RadioGroup>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  type="number"
+                  label="Phone"
+                  variant="outlined"
+                  value={userDetails.phone}
+                  onChange={(e) => handleInputChange("phone", e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Address"
+                  variant="outlined"
+                  value={userDetails.address}
+                  onChange={(e) => handleInputChange("address", e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <RadioGroup
+                  aria-label="gender"
+                  name="gender"
+                  value={userDetails.gender}
+                  onChange={(e) => handleInputChange("gender", e.target.value)}
+                >
+                  <FormControlLabel
+                    value="male"
+                    control={<Radio />}
+                    label="Male"
+                  />
+                  <FormControlLabel
+                    value="female"
+                    control={<Radio />}
+                    label="Female"
+                  />
+                  <FormControlLabel
+                    value="other"
+                    control={<Radio />}
+                    label="Other"
+                  />
+                </RadioGroup>
+              </Grid>
             </Grid>
-          </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className="btn-class"
-          >
-            Register
-          </Button>
-        </form>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className="btn-class"
+              disabled={
+                !userDetails.address ||
+                !userDetails.email ||
+                !userDetails.gender ||
+                !userDetails.password ||
+                !userDetails.phone ||
+                !userDetails.username
+              }
+            >
+              Register
+            </Button>
+          </form>
+        </div>
+      </Container>
+      <div className="snackbar-div">
+        <Snackbar
+          open={isSnackbarOpen}
+          autoHideDuration={4000} 
+          onClose={closeSnackbar}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        >
+          <SnackbarContent
+            message={snackbarMessage}
+            action={
+              <Button color="inherit" size="small" onClick={closeSnackbar}>
+                Close
+              </Button>
+            }
+          />
+        </Snackbar>
       </div>
-    </Container>
+    </>
   );
 };
 

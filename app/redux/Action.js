@@ -7,6 +7,7 @@ import {
   GET_STUDENT_LIST,
   GET_LIBRARIAN_LIST,
   USER_LOGIN,
+  GET_BOOK_LIST,
 } from "./ActionType";
 import axios from "axios";
 
@@ -20,6 +21,13 @@ export const failRequest = (error) => {
 export const getAllStudents = (data) => {
   return {
     type: GET_STUDENT_LIST,
+    payload: data,
+  };
+};
+
+export const getAllBooks = (data) => {
+  return {
+    type: GET_BOOK_LIST,
     payload: data,
   };
 };
@@ -66,7 +74,24 @@ export const fetchStudentList = () => {
       .get(studentDetails)
       .then((res) => {
         const studentList = res.data;
+        console.log("haii",studentList)
         dispatch(getAllStudents(studentList));
+      })
+      .catch((err) => {
+        dispatch(failRequest(err.message));
+      });
+  };
+};
+
+export const fetchBookList= () => {
+  return (dispatch) => {
+    dispatch(getAllBooks([]));
+    axios
+      .get(bookDetails)
+      .then((res) => {
+        const bookList = res.data;
+        console.log("haii",bookList)
+        dispatch(getAllBooks(bookList));
       })
       .catch((err) => {
         dispatch(failRequest(err.message));
