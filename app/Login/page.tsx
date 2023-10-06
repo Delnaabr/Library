@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useEffect, useState } from "react";
 import {
   Snackbar,
@@ -10,8 +10,8 @@ import {
 } from "@mui/material";
 import "../../app/globals.css";
 import Link from "next/link";
-import { register } from "@/pages/utils/apis";
 import { useRouter } from "next/navigation";
+import { LoginRegister } from "@/pages/utils/loginUtils";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -19,8 +19,8 @@ const Login = () => {
   const router = useRouter();
   const [isSnackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  
-  const openSnackbar = (message:any) => {
+
+  const openSnackbar = (message: any) => {
     setSnackbarMessage(message);
     setSnackbarOpen(true);
   };
@@ -28,8 +28,8 @@ const Login = () => {
   const closeSnackbar = () => {
     setSnackbarOpen(false);
   };
-  
-  const handleLogin = (e:any) => {
+
+  const handleLogin = async (e: any) => {
     e.preventDefault();
     const adminUsername = "admin";
     const adminPassword = "admin";
@@ -39,30 +39,13 @@ const Login = () => {
       router.push("/Admin/librarianList");
       window.location.reload();
     } else {
-      fetch(register, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          const matchingUser = data.find(
-            (user:any) =>
-              user.username === username && user.password === password
-          );
+      const result = await LoginRegister(username, password, "login");
 
-          if (matchingUser) {
-            localStorage.setItem("userId", matchingUser.id);
-            openSnackbar("Login successful");
-            router.push("/Listing");
-          } else {
-            openSnackbar("Login failed. Incorrect username or password.");
-          }
-        })
-        .catch(() => {
-          openSnackbar("Error fetching user data");
-        });
+      if (result !== null) {
+        localStorage.setItem("userId", username);
+        openSnackbar("Login successful");
+        router.push("/Listing");
+      }
     }
   };
 
@@ -125,9 +108,9 @@ const Login = () => {
       <div className="snackbar-div">
         <Snackbar
           open={isSnackbarOpen}
-          autoHideDuration={4000} 
+          autoHideDuration={4000}
           onClose={closeSnackbar}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         >
           <SnackbarContent
             message={snackbarMessage}

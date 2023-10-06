@@ -95,11 +95,18 @@ const Header = () => {
                   </>
                 ) : (
                   isLogined && (
+                    <>
                     <li>
                       <Link href="/Listing" passHref>
                         Listing
                       </Link>
                     </li>
+                     <li>
+                     <Link href="/" passHref onClick={handleLogout}>
+                       sign out
+                     </Link>
+                   </li>
+                   </>
                   )
                 )}
 

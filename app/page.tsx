@@ -26,6 +26,7 @@ export default function Page() {
                     src="assets/img/slide/libr.jpeg"
                     alt=""
                     className="img-fluid"
+                    style={{'filter':'blur(6px)'}}
                   />
                   <div className="carousel-container">
                     <div className="carousel-content animate__animated animate__fadeInUp">

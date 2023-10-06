@@ -33,7 +33,7 @@ const Listing = () => {
   const [selectedTab, setSelectedTab] = useState<"students" | "books">(
     "students"
   );
-  const [searchBookName, setSearchBookName] = useState(""); // State for Book Name search
+  const [searchBookName, setSearchBookName] = useState("");
   const [searchAuthor, setSearchAuthor] = useState("");
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [noDataFound, setNoDataFound] = useState(false);
@@ -41,7 +41,7 @@ const Listing = () => {
   const [open, setOpen] = useState(false);
   const [isReturnDialogOpen, setIsReturnDialogOpen] = useState(false);
   const [editedItem, setEditedItem] = useState<any>(null);
-  const [editedReturnDate, setEditedReturnDate] = useState<string>("");
+  const [editedReturnDate, setEditedReturnDate] = useState<any>("");
 
   const formatToIST = (date: Date) => {
     return moment(date).tz("Asia/Kolkata").format("DD-MM-YYYY");
@@ -61,11 +61,17 @@ const Listing = () => {
   };
 
   const handleReturnDateEdit = () => {
+    console.log("jjfufu");
     updateBookReturnDateAndStatus(editedItem.id, editedReturnDate)
       .then((updatedItem) => {
+        console.log("jsh", updatedItem);
         const updatedStudents = students.map((student) => {
           if (student.id === editedItem.id) {
-            return { ...student, ...updatedItem };
+            return {
+              ...student,
+              book_return_date: formatToIST(editedReturnDate),
+              status: "returned",
+            };
           }
           return student;
         });
@@ -107,12 +113,10 @@ const Listing = () => {
           );
 
     const filtered = data.filter((item) => {
-      // Filter by Book Name
       const matchesBookName =
         item.book_name?.toLowerCase().includes(searchBookName?.toLowerCase()) ||
         searchBookName === "";
 
-      // Filter by Author
       const matchesAuthor =
         item.author?.toLowerCase().includes(searchAuthor?.toLowerCase()) ||
         searchAuthor === "";
@@ -310,7 +314,7 @@ const Listing = () => {
       <div className="search-bar-div">
         {selectedTab === "books" && (
           <>
-            <FormControl variant="outlined" className="category-select m-1" >
+            <FormControl variant="outlined" className="category-select m-1">
               <InputLabel htmlFor="category-select">Category</InputLabel>
               <Select
                 value={selectedCategory}
@@ -344,7 +348,6 @@ const Listing = () => {
           </>
         )}
       </div>
-
       {renderTable()}
     </div>
   );

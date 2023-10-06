@@ -8,16 +8,12 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
   Snackbar,
   SnackbarContent,
 } from "@mui/material";
 import "../../app/globals.css";
-import { register } from "@/pages/utils/apis";
 import { useRouter } from "next/navigation";
+import { LoginRegister } from "@/pages/utils/loginUtils";
 
 const Register = () => {
   const router = useRouter();
@@ -31,8 +27,8 @@ const Register = () => {
   });
   const [isSnackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  
-  const openSnackbar = (message:any) => {
+
+  const openSnackbar = (message: any) => {
     setSnackbarMessage(message);
     setSnackbarOpen(true);
   };
@@ -48,32 +44,17 @@ const Register = () => {
     }));
   };
 
-  const handleRegister = (e: any) => {
+  const handleRegister = async (e: any) => {
     e.preventDefault();
-
-    fetch(register, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userDetails),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        openSnackbar("Registered Successfully");
-        router.push("/Login");
-        setUserDetails({
-          username: "",
-          email: "",
-          password: "",
-          phone: "",
-          address: "",
-          gender: "",
-        });
-      })
-      .catch((error) => {
-        openSnackbar("Error");
-      });
+    const result = await LoginRegister(
+      userDetails.email,
+      userDetails.password,
+      "register"
+    );
+    if (result !== null) {
+      router.push("/Login");
+      console.log(result, "fghjk");
+    }
   };
 
   return (
@@ -182,9 +163,9 @@ const Register = () => {
       <div className="snackbar-div">
         <Snackbar
           open={isSnackbarOpen}
-          autoHideDuration={4000} 
+          autoHideDuration={4000}
           onClose={closeSnackbar}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         >
           <SnackbarContent
             message={snackbarMessage}

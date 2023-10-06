@@ -23,6 +23,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "../lms/pages/Login.tsx", "../lms/pages/Register/Register.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "../lms/pages/Login.tsx", "../lms/pages/Register/Register.tsx", "tests/login.test.spec.js"],
   "exclude": ["node_modules"]
 }

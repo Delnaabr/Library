@@ -25,6 +25,12 @@ export const getAllStudents = (data) => {
   };
 };
 
+export const getAllLibrarian = (data) => {
+  return {
+    type: GET_LIBRARIAN_LIST,
+    payload: data,
+  };
+}
 export const getAllBooks = (data) => {
   return {
     type: GET_BOOK_LIST,
@@ -32,40 +38,27 @@ export const getAllBooks = (data) => {
   };
 };
 
-// export const userLogin = (userDetails) => {
-//   return {
-//     type: USER_LOGIN,
-//     payload: userDetails,
-//   };
-// };
+export const addNewStudent = (data) => {
+  return {
+    type: ADD_NEW_USER,
+    payload: data,
+  };
+};
 
-// export const getProductList = (data) => {
-//   return {
-//     type: GET_PRODUCT_LIST,
-//     payload: data,
-//   };
-// };
+export const addNewBook = (data) => {
+  return {
+    type: ADD_NEW_BOOK,
+    payload: data,
+  };
+};
 
-// export const addNewUser = (data) => {
-//   return {
-//     type: ADD_NEW_USER,
-//     payload: data,
-//   };
-// };
+export const deleteBook = (bookId) => {
+  return {
+    type: DELETE_BOOK,
+    payload: bookId,
+  };
+};
 
-// export const addNewProduct = (data) => {
-//   return {
-//     type: ADD_NEW_BOOK,
-//     payload: data,
-//   };
-// };
-
-// export const deleteProduct = (productId) => {
-//   return {
-//     type: DELETE_BOOK,
-//     payload: productId,
-//   };
-// };
 
 export const fetchStudentList = () => {
   return (dispatch) => {

@@ -19,6 +19,9 @@ import { bookDetails } from "@/pages/utils/apis";
 import "../../globals.css";
 import AddBooksPopup from "@/app/AddBooks/page";
 import EditBookPopup from "@/app/EditBooks/page";
+import AddCardIcon from "@mui/icons-material/AddCard";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 
 function BookListing() {
   const [books, setBooks] = useState<any[]>([]);
@@ -99,13 +102,13 @@ function BookListing() {
     <>
       <div>
         <TableContainer className="admin-table-container">
-          <Button
-            color="success"
-            className="admin-table-container"
-            onClick={handleShowAddBooksPopup}
-          >
-            Add Books
-          </Button>
+          <h4 className="flex justify-center items-right mt-8">Book List</h4>
+          <div className="flex justify-end mt-8 mr-8">
+            <AddCardIcon
+              onClick={handleShowAddBooksPopup}
+              className="cursor-pointer hover:cursor-palm"
+            />
+          </div>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
@@ -133,24 +136,17 @@ function BookListing() {
                     )}
                   </TableCell>
                   <TableCell align="center">
-                    <Button
-                      className="edit-btn"
-                      color="primary"
+                    <EditIcon
                       onClick={() => handleEditBook(lib)}
-                    >
-                      Edit
-                    </Button>
+                      className="cursor-pointer hover:cursor-palm"
+                    />
                   </TableCell>
-
                   <TableCell align="center">
                     {!lib.blocked ? (
-                      <Button
-                        className="delete-btn"
-                        color="error"
+                      <DeleteForeverOutlinedIcon
                         onClick={() => openDeleteConfirmation(lib.id)}
-                      >
-                        Delete
-                      </Button>
+                        className="cursor-pointer hover:cursor-palm"
+                      />
                     ) : (
                       "Deleted"
                     )}
